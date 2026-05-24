@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>direcato — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ember: #ff6a00;
+    --gold: #f5c842;
+    --ash: #2a1a0e;
+    --bark: #3d2409;
+    --cream: #f5edd8;
+    --smoke: #c4a882;
+    --char: #0d0603;
+    --parchment: #ede0c4;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--char);
+    color: var(--cream);
+    font-family: 'Lora', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+  .room-glow {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120vw; height: 60vh;
+    background: radial-gradient(ellipse at 50% 100%, rgba(255,120,20,0.22) 0%, rgba(200,80,10,0.1) 35%, transparent 70%);
+    pointer-events: none; z-index: 0;
+    animation: flickerGlow 3s ease-in-out infinite alternate;
+  }
+  @keyframes flickerGlow {
+    0%   { opacity: 0.8; transform: translateX(-50%) scaleX(1); }
+    50%  { opacity: 1;   transform: translateX(-50%) scaleX(1.04); }
+    100% { opacity: 0.9; transform: translateX(-50%) scaleX(0.98); }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 1.2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(13,6,3,0.95) 0%, transparent 100%);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-style: italic;
+    color: var(--gold); text-decoration: none;
+  }
+  .nav-gh {
+    color: var(--smoke); text-decoration: none; font-size: 0.82rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-gh:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    padding-bottom: 3rem;
+    position: relative; z-index: 1;
+  }
+  .hero-text {
+    text-align: center; margin-bottom: 2rem;
+    animation: fadeUp 1.2s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 400; line-height: 1.15;
+    color: var(--cream); margin-bottom: 0.5rem;
+  }
+  .hero-text h1 em { color: var(--gold); font-style: italic; }
+  .hero-text p { color: var(--smoke); font-size: 1rem; letter-spacing: 0.04em; }
+
+  /* FIREPLACE */
+  .fireplace-wrap {
+    width: 100%; max-width: 680px;
+    position: relative; z-index: 2;
+  }
+  .fireplace-svg { width: 100%; height: auto; display: block; }
+
+  /* PROJECTS SECTION */
+  section {
+    position: relative; z-index: 2;
+    max-width: 900px; margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--ember);
+    margin-bottom: 0.8rem; display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 400; color: var(--cream);
+    margin-bottom: 2.5rem; line-height: 1.2;
+  }
+  .section-title em { color: var(--gold); font-style: italic; }
+
+  .divider {
+    max-width: 900px; height: 1px; margin: 0 auto;
+    background: linear-gradient(to right, transparent, rgba(245,200,66,0.25), transparent);
+  }
+
+  /* PROJECT CARDS */
+  .projects { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .project-card {
+    background: var(--bark);
+    border: 1px solid rgba(245,200,66,0.1);
+    border-radius: 3px; padding: 1.8rem 2rem;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 1rem; align-items: start;
+    text-decoration: none; color: inherit;
+    transition: border-color 0.35s, background 0.35s, transform 0.35s;
+    position: relative; overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--ember), var(--gold));
+    transform: scaleY(0); transform-origin: top;
+    transition: transform 0.35s ease;
+  }
+  .project-card:hover {
+    border-color: rgba(245,200,66,0.28);
+    background: #4a2a10;
+    transform: translateX(4px);
+  }
+  .project-card:hover::before { transform: scaleY(1); }
+
+  .project-card.placeholder {
+    border-style: dashed;
+    border-color: rgba(245,200,66,0.08);
+    cursor: default;
+    background: transparent;
+  }
+  .project-card.placeholder:hover {
+    transform: none; background: transparent;
+    border-color: rgba(245,200,66,0.12);
+  }
+  .project-card.placeholder::before { display: none; }
+
+  .project-tag {
+    font-size: 0.68rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ember);
+    margin-bottom: 0.5rem; display: block;
+  }
+  .project-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 400;
+    color: var(--cream); margin-bottom: 0.5rem;
+  }
+  .project-card p {
+    color: var(--smoke); font-size: 0.9rem;
+    line-height: 1.75;
+  }
+  .project-card.placeholder h3 { color: rgba(245,237,216,0.3); }
+  .project-card.placeholder p  { color: rgba(196,168,130,0.3); }
+
+  .project-pills {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 0.9rem;
+  }
+  .pill {
+    font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(255,106,0,0.12);
+    color: var(--ember);
+    border: 1px solid rgba(255,106,0,0.2);
+    border-radius: 2px; padding: 3px 9px;
+  }
+
+  .project-arrow {
+    color: rgba(245,200,66,0.4);
+    font-size: 1.3rem; margin-top: 0.2rem;
+    transition: color 0.3s, transform 0.3s;
+    flex-shrink: 0;
+  }
+  .project-card:not(.placeholder):hover .project-arrow {
+    color: var(--gold); transform: translate(3px, -2px);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 2.5rem;
+    color: rgba(196,168,130,0.3);
+    font-size: 0.75rem; letter-spacing: 0.08em;
+    position: relative; z-index: 2;
+  }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="room-glow"></div>
+
+<nav>
+  <a class="nav-logo" href="#">direcato</a>
+  <a class="nav-gh" href="https://github.com/direcato" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<!-- HERO + FIREPLACE -->
+<div class="hero">
+  <div class="hero-text">
+    <h1>Built with care,<br><em>shipped with intention</em></h1>
+    <p>Software projects by direcato</p>
+  </div>
+
+  <div class="fireplace-wrap">
+    <svg class="fireplace-svg" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="firebox-glow" cx="50%" cy="80%" r="60%">
+          <stop offset="0%" stop-color="#ff8c00" stop-opacity="0.55"/>
+          <stop offset="55%" stop-color="#ff4500" stop-opacity="0.28"/>
+          <stop offset="100%" stop-color="#1a0800" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- mantle -->
+      <rect x="28" y="58" width="644" height="5" rx="2" fill="#6b3518"/>
+      <rect x="30" y="60" width="640" height="16" rx="2" fill="#4a2208"/>
+      <rect x="30" y="73" width="640" height="5" rx="1" fill="#3a1a06"/>
+
+      <!-- mantle decor candles -->
+      <rect x="100" y="32" width="7" height="28" rx="2" fill="#f0e8d4"/>
+      <ellipse cx="103" cy="32" rx="3.5" ry="4" fill="#ffe066" opacity="0.9"/>
+      <rect x="590" y="36" width="7" height="24" rx="2" fill="#f0e8d4"/>
+      <ellipse cx="593" cy="36" rx="3.5" ry="4" fill="#ffe066" opacity="0.9"/>
+
+      <!-- clock on mantle -->
+      <rect x="318" y="24" width="64" height="36" rx="3" fill="#3d2008"/>
+      <rect x="321" y="27" width="58" height="30" rx="2" fill="#5c3010"/>
+      <circle cx="350" cy="42" r="11" fill="#2a1405" stroke="#7a4818" stroke-width="1"/>
+      <line x1="350" y1="42" x2="350" y2="35" stroke="#f5c842" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="350" y1="42" x2="355" y2="46" stroke="#f5c842" stroke-width="1" stroke-linecap="round"/>
+
+      <!-- columns -->
+      <rect x="75" y="75" width="55" height="268" rx="2" fill="#3d1e08"/>
+      <rect x="78" y="79" width="10" height="260" rx="1" fill="#4f2810" opacity="0.8"/>
+      <rect x="118" y="79" width="8" height="260" rx="1" fill="#2e1606" opacity="0.6"/>
+      <rect x="72" y="79" width="62" height="10" rx="1" fill="#5c2e10"/>
+
+      <rect x="570" y="75" width="55" height="268" rx="2" fill="#3d1e08"/>
+      <rect x="573" y="79" width="10" height="260" rx="1" fill="#4f2810" opacity="0.8"/>
+      <rect x="613" y="79" width="8" height="260" rx="1" fill="#2e1606" opacity="0.6"/>
+      <rect x="567" y="79" width="62" height="10" rx="1" fill="#5c2e10"/>
+
+      <!-- arch opening -->
+      <path d="M 135 343 L 135 190 Q 135 128 300 128 Q 465 128 465 190 L 465 343 Z" fill="#0d0603"/>
+      <path d="M 135 343 L 135 190 Q 135 128 300 128 Q 465 128 465 190 L 465 343" fill="none" stroke="#4a2208" stroke-width="5"/>
+
+      <!-- firebox glow -->
+      <path d="M 135 343 L 135 190 Q 135 133 300 133 Q 465 133 465 190 L 465 343 Z" fill="url(#firebox-glow)"/>
+      <path d="M 155 340 L 155 198 Q 155 153 300 153 Q 445 153 445 198 L 445 340 Z" fill="#140804"/>
+
+      <!-- logs -->
+      <ellipse cx="300" cy="340" rx="90" ry="11" fill="#2a1408" opacity="0.9"/>
+      <ellipse cx="255" cy="344" rx="52" ry="9" fill="#3d1e08"/>
+      <ellipse cx="345" cy="344" rx="52" ry="9" fill="#3a1c07"/>
+      <ellipse cx="202" cy="344" rx="11" ry="9" fill="#5c2e10"/>
+      <ellipse cx="202" cy="344" rx="6" ry="5" fill="#3a1a06"/>
+      <ellipse cx="398" cy="344" rx="11" ry="9" fill="#5c2e10"/>
+      <ellipse cx="398" cy="344" rx="6" ry="5" fill="#3a1a06"/>
+
+      <!-- ember bed -->
+      <ellipse cx="300" cy="350" rx="108" ry="10" fill="#8b2500" opacity="0.7"/>
+      <ellipse cx="300" cy="351" rx="82" ry="7" fill="#cc4400" opacity="0.5"/>
+      <ellipse cx="288" cy="351" rx="38" ry="4" fill="#ff6a00" opacity="0.6"/>
+
+      <!-- FLAMES -->
+      <path fill="#ff5500" opacity="0.9">
+        <animate attributeName="d" dur="1.8s" repeatCount="indefinite"
+          values="M 280 348 C 275 308 255 278 265 244 C 275 220 296 228 301 205 C 306 228 321 230 316 258 C 326 232 341 225 336 205 C 349 235 339 270 326 300 C 336 272 353 262 346 242 C 359 275 346 315 321 342 Z;
+                  M 280 348 C 268 303 248 273 260 237 C 270 212 293 221 298 197 C 304 221 320 224 313 253 C 324 226 340 219 334 199 C 348 230 337 266 323 297 C 334 267 352 257 344 237 C 358 271 344 311 321 342 Z;
+                  M 280 348 C 278 310 260 282 268 247 C 278 222 298 230 303 207 C 308 230 323 232 317 260 C 328 234 342 228 337 208 C 350 238 340 272 327 302 C 337 274 354 264 347 244 C 361 277 348 316 321 342 Z;
+                  M 280 348 C 275 308 255 278 265 244 C 275 220 296 228 301 205 C 306 228 321 230 316 258 C 326 232 341 225 336 205 C 349 235 339 270 326 300 C 336 272 353 262 346 242 C 359 275 346 315 321 342 Z"/>
+      </path>
+      <path fill="#ff8c00" opacity="0.75">
+        <animate attributeName="d" dur="2.2s" repeatCount="indefinite"
+          values="M 295 348 C 288 322 275 306 282 283 C 289 266 306 270 311 256 C 316 270 329 273 323 293 C 333 272 345 266 340 252 C 351 276 343 303 329 323 Z;
+                  M 295 348 C 284 318 271 300 279 276 C 286 259 304 264 309 249 C 314 264 327 267 320 288 C 331 266 343 260 337 246 C 349 270 340 298 326 319 Z;
+                  M 295 348 C 291 325 278 309 285 286 C 292 269 309 273 314 259 C 319 273 332 276 326 296 C 336 275 348 269 342 255 C 353 279 345 306 331 326 Z;
+                  M 295 348 C 288 322 275 306 282 283 C 289 266 306 270 311 256 C 316 270 329 273 323 293 C 333 272 345 266 340 252 C 351 276 343 303 329 323 Z"/>
+      </path>
+      <path fill="#ffd700" opacity="0.55">
+        <animate attributeName="d" dur="1.5s" repeatCount="indefinite"
+          values="M 300 348 C 296 332 288 320 293 306 C 298 295 309 297 313 288 C 317 297 325 299 321 311 C 327 298 335 294 331 284 C 338 298 332 316 321 330 Z;
+                  M 300 348 C 293 328 285 314 291 300 C 296 288 307 291 311 281 C 315 291 323 293 319 306 C 325 292 333 288 329 278 C 336 293 329 311 318 326 Z;
+                  M 300 348 C 298 334 290 323 295 308 C 300 297 311 299 315 290 C 319 299 327 301 323 313 C 329 300 337 296 332 286 C 339 300 333 318 322 332 Z;
+                  M 300 348 C 296 332 288 320 293 306 C 298 295 309 297 313 288 C 317 297 325 299 321 311 C 327 298 335 294 331 284 C 338 298 332 316 321 330 Z"/>
+      </path>
+
+      <!-- embers -->
+      <circle cx="292" cy="334" r="2.2" fill="#ff9500" opacity="0.9">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 10,-90; 14,-165" dur="2.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.9;0.5;0" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="312" cy="330" r="1.8" fill="#ffb347" opacity="0.8">
+        <animateTransform attributeName="transform" type="translate" values="0,0; -16,-75; -22,-155" dur="3.3s" begin="0.7s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="3.3s" begin="0.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="300" cy="337" r="1.5" fill="#ffd700" opacity="0.85">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 6,-80; 8,-160" dur="2.5s" begin="1.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.85;0.4;0" dur="2.5s" begin="1.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="278" cy="338" r="1.5" fill="#ff6a00" opacity="0.7">
+        <animateTransform attributeName="transform" type="translate" values="0,0; -8,-70; -12,-148" dur="3.1s" begin="2.1s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.7;0.35;0" dur="3.1s" begin="2.1s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- hearth floor -->
+      <rect x="100" y="343" width="500" height="26" rx="2" fill="#2a1208"/>
+      <rect x="100" y="343" width="500" height="5" rx="0" fill="#4a2010"/>
+      <!-- tiles -->
+      <rect x="110" y="348" width="36" height="18" rx="1" fill="#1e0d06" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="151" y="348" width="36" height="18" rx="1" fill="#221006" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="192" y="348" width="36" height="18" rx="1" fill="#1e0d06" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="233" y="348" width="36" height="18" rx="1" fill="#221006" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="274" y="348" width="36" height="18" rx="1" fill="#1e0d06" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="315" y="348" width="36" height="18" rx="1" fill="#221006" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="356" y="348" width="36" height="18" rx="1" fill="#1e0d06" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="397" y="348" width="36" height="18" rx="1" fill="#221006" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="438" y="348" width="36" height="18" rx="1" fill="#1e0d06" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="479" y="348" width="36" height="18" rx="1" fill="#221006" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="520" y="348" width="36" height="18" rx="1" fill="#1e0d06" stroke="#3a1a08" stroke-width="0.5"/>
+      <rect x="555" y="348" width="40" height="18" rx="1" fill="#221006" stroke="#3a1a08" stroke-width="0.5"/>
+
+      <!-- side bricks -->
+      <rect x="30" y="79" width="48" height="268" rx="0" fill="#261005"/>
+      <rect x="622" y="79" width="48" height="268" rx="0" fill="#261005"/>
+
+      <!-- floor cast glow -->
+      <ellipse cx="300" cy="370" rx="140" ry="12" fill="rgba(255,100,0,0.13)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="divider"></div>
+<section id="projects">
+  <span class="section-label reveal">Projects</span>
+  <h2 class="section-title reveal">Things I've <em>built</em></h2>
+
+  <div class="projects">
+
+    <!-- OpenWhitelist — real project -->
+    <a class="project-card reveal" href="https://github.com/direcato/OpenWhitelist" target="_blank" rel="noopener">
+      <div>
+        <span class="project-tag">Minecraft Plugin</span>
+        <h3>OpenWhitelist</h3>
+        <p>A whitelist plugin for Paper/Purpur servers with full Java and Bedrock Edition support via Geyser/Floodgate. Features paginated listings, YAML-based storage, auto-update with hash verification, and granular permission nodes.</p>
+        <div class="project-pills">
+          <span class="pill">Java</span>
+          <span class="pill">Paper API</span>
+          <span class="pill">Floodgate</span>
+          <span class="pill">GPL-3.0</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+
+    <!-- Placeholder slots -->
+    <div class="project-card placeholder reveal">
+      <div>
+        <span class="project-tag">Coming soon</span>
+        <h3>Next project</h3>
+        <p>Something's brewing. Check back later.</p>
+      </div>
+    </div>
+
+    <div class="project-card placeholder reveal">
+      <div>
+        <span class="project-tag">Coming soon</span>
+        <h3>Another project</h3>
+        <p>More to come.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<footer>
+  <p>direcato &nbsp;·&nbsp; <a href="https://github.com/direcato" style="color:inherit; text-decoration:none;">github.com/direcato</a></p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 90);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
