@@ -153,18 +153,6 @@
   }
   .project-card:hover::before { transform: scaleY(1); }
 
-  .project-card.placeholder {
-    border-style: dashed;
-    border-color: rgba(245,200,66,0.08);
-    cursor: default;
-    background: transparent;
-  }
-  .project-card.placeholder:hover {
-    transform: none; background: transparent;
-    border-color: rgba(245,200,66,0.12);
-  }
-  .project-card.placeholder::before { display: none; }
-
   .project-tag {
     font-size: 0.68rem; letter-spacing: 0.18em;
     text-transform: uppercase; color: var(--ember);
@@ -179,8 +167,6 @@
     color: var(--smoke); font-size: 0.9rem;
     line-height: 1.75;
   }
-  .project-card.placeholder h3 { color: rgba(245,237,216,0.3); }
-  .project-card.placeholder p  { color: rgba(196,168,130,0.3); }
 
   .project-pills {
     display: flex; flex-wrap: wrap; gap: 0.4rem;
@@ -201,7 +187,7 @@
     transition: color 0.3s, transform 0.3s;
     flex-shrink: 0;
   }
-  .project-card:not(.placeholder):hover .project-arrow {
+  .project-card:hover .project-arrow {
     color: var(--gold); transform: translate(3px, -2px);
   }
 
@@ -373,7 +359,7 @@
 
   <div class="projects">
 
-    <!-- OpenWhitelist — real project -->
+    <!-- OpenWhitelist -->
     <a class="project-card reveal" href="https://github.com/direcato/OpenWhitelist" target="_blank" rel="noopener">
       <div>
         <span class="project-tag">Minecraft Plugin</span>
@@ -389,22 +375,37 @@
       <span class="project-arrow">↗</span>
     </a>
 
-    <!-- Placeholder slots -->
-    <div class="project-card placeholder reveal">
+    <!-- OpenSecureSession -->
+    <a class="project-card reveal" href="https://github.com/direcato/OpenSecureSession" target="_blank" rel="noopener">
       <div>
-        <span class="project-tag">Coming soon</span>
-        <h3>Next project</h3>
-        <p>Something's brewing. Check back later.</p>
+        <span class="project-tag">Minecraft Plugin</span>
+        <h3>OpenSecureSession</h3>
+        <p>A security plugin that prevents session hijacking on cracked Minecraft servers. Protects offline-mode accounts from identity spoofing by enforcing per-session authentication guards at the server level.</p>
+        <div class="project-pills">
+          <span class="pill">Java</span>
+          <span class="pill">Paper API</span>
+          <span class="pill">Security</span>
+          <span class="pill">GPL-3.0</span>
+        </div>
       </div>
-    </div>
+      <span class="project-arrow">↗</span>
+    </a>
 
-    <div class="project-card placeholder reveal">
+    <!-- Starlink-Mod -->
+    <a class="project-card reveal" href="https://github.com/direcato/Starlink-Mod" target="_blank" rel="noopener">
       <div>
-        <span class="project-tag">Coming soon</span>
-        <h3>Another project</h3>
-        <p>More to come.</p>
+        <span class="project-tag">Minecraft Mod</span>
+        <h3>Starlink Mod</h3>
+        <p>A Fabric mod that brings a fully functional Starlink satellite system into Minecraft. Place a dish, run through a 6-step setup wizard, configure your in-game WiFi network, pick a subscription plan, and browse the web — all from inside the game. Includes a persistent JSON database, real block-position speed tests, and an interactive phone overlay with 7 apps.</p>
+        <div class="project-pills">
+          <span class="pill">Java</span>
+          <span class="pill">Fabric</span>
+          <span class="pill">Minecraft 26.1</span>
+          <span class="pill">Gradle</span>
+        </div>
       </div>
-    </div>
+      <span class="project-arrow">↗</span>
+    </a>
 
   </div>
 </section>
